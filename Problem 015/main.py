@@ -1,62 +1,65 @@
-class Point:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+'''
+For a 2x2
+=========
 
-    def distance(self, pt):
-        return abs(self.x - pt.x) + abs(self.y - pt.y)
+1100
+1010
+1001
+0110 -- Flipped bits version of above
+0101
+0110
+0011
 
-    def __str__(self):
-        return '({0}, {1})'.format(self.x, self.y)
+You have 4 bits
+You have 2 1s and 2 0s
 
-    def __repr__(self):
-        return self.__str__()
+The number of numbers with such conditions are
+4 choose 2
+4 bits, choose 2 1s
 
-    def __eq__(self, other):
-        return ((self.x == other.x) and (self.y == other.y))
+For a 3x3
+=========
 
-    def __ne__(self, other):
-        return ((self.x != other.x) or (self.y != other.y))
+111000
+110100
+110010
+110001
+101100
+101010
+101001
+100110
+100101
+100011
+011100 -- Flipped bits version of above
+011010
+011001
+010110
+010101
+010011
+001110
+001101
+001011
+000111
 
-for n in range(20):
+You have 6 bits
+You have 3 1s and 3 0s
 
-    end = Point(n, n)
-    start = Point(0, 0)
-    paths = [[end]]
-    for i in range(n+1):
-        for j in range(n+1):
-            # print('{0}/20, {1}/20 <-- {2}'.format(i, j, len(paths)))
-            pos1 = Point(n-i, n-j)
-            pos2 = Point(n-j, n-i)
+The number of numbers with such conditions are
+12 choose 6
+12 bits, choose 6 1s
 
-            # Remove duplicates
-            new_paths = []
-            for path in paths:
-                if path not in new_paths:
-                    new_paths.append(path)
-            paths = new_paths
+In general:
+2n choose n
+'''
 
-            for path in paths:
-                last_point = path[-1]
-                if last_point.distance(pos1) == 1:
-                    # Only add a path if it is going back up, not back to the end
-                    if last_point.x >= pos1.x and last_point.y >= pos1.y:
-                        paths.append(path + [pos1])
+def factorial(n):
+    result = 1
+    for i in range(2, n+1):
+        result *= i
+    return result
 
-                if last_point.distance(pos2) == 1:
-                    # Only add a path if it is going back up, not back to the end                
-                    if last_point.x >= pos2.x and last_point.y >= pos2.y:                
-                        paths.append(path + [pos2])
+def choose(n, k):
+    return factorial(n)/(factorial(n-k) * factorial(k))
 
-    unique_solutions = []
-    for path in paths:
-        if path not in unique_solutions:
-            if path[-1] == start:
-                unique_solutions.append(path)
-
-    count = 0
-    for path in unique_solutions:
-        if path[0] == end and path[-1] == start:
-            count += 1
-
-    print('n: {0} --> {1}'.format(n, count))
+grid_size = 20
+print(choose(2*grid_size, grid_size)) # 137846528820
